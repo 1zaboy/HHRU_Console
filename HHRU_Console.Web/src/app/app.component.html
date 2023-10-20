@@ -1,0 +1,17 @@
+<tui-root>
+<ng-container *ngIf="authUser; else login">
+  <div class="screen">
+    <div class="screen__menu">
+      <app-menu></app-menu>
+    </div>
+    <div class="screen__workzone">
+      <router-outlet></router-outlet>
+    </div>
+  </div>
+</ng-container>
+
+<ng-template #login>
+  <router-outlet></router-outlet>
+</ng-template>
+
+</tui-root>

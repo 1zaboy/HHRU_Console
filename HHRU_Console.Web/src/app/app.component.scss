@@ -1,0 +1,18 @@
+.screen {
+  display: flex;
+  flex-direction: row;
+  height: 100%;
+
+  &__menu {
+    padding: 1rem;
+    flex-basis: 25%;
+    max-width: 300px;
+    min-width: 100px;
+    background-color: cornflowerblue;
+  }
+
+  &__workzone {
+    padding: 1rem;
+    flex: 1;
+  }
+}

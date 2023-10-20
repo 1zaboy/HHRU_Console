@@ -1,0 +1,15 @@
+<div
+  *ngIf="!needView"
+  class="cell-content"
+></div>
+<div
+  *ngIf="needView"
+  class="cell-content"
+>
+  <div
+    class="cell-content__origin"
+    [attr.title]="value"
+  >
+    <div class="grid-cell-text-environment">{{ value }}</div>
+  </div>
+</div>

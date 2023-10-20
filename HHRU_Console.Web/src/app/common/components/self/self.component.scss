@@ -1,0 +1,10 @@
+.self {
+  display: flex;
+  margin-bottom: 1rem;
+
+  &__email {
+    flex: 1;
+    align-self: center;
+    padding-left: 14px;
+  }
+}

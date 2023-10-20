@@ -1,0 +1,9 @@
+<div class="overview">
+  <div class="overview__tools">
+    <p>overview works!</p>
+    <div>{{ user | async }}</div>
+    <button (click)="getMe()">Get Me</button>
+    <button (click)="logout()">Logout</button>
+  </div>
+  <app-ag-data-grid class="overview__grid" *ngIf="grid != null" [grid]="grid"></app-ag-data-grid>
+</div>
