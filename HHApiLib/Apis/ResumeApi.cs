@@ -19,4 +19,20 @@ public class ResumeApi : ApiBase
             .WithHeaderAgent()
             .GetJsonAsync<ArrayWrapper<Resume>>();
     }
+
+    public async Task<Resume> GetResumeAsync(string resumeId)
+    {
+        return await $"{Setup.Conf.MainApiUrl}/resumes/{resumeId}"
+            .WithOAuthBearerToken(Token)
+            .WithHeaderAgent()
+            .GetJsonAsync<Resume>();
+    }
+
+    public async Task<IFlurlResponse> Republish(string resumeId)
+    {
+        return await $"{Setup.Conf.MainApiUrl}/resumes/{resumeId}/publish"
+            .WithOAuthBearerToken(Token)
+            .WithHeaderAgent()
+            .PostAsync();
+    }
 }

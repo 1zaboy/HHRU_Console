@@ -1,6 +1,9 @@
 ﻿using HHApiLib.Configurations;
+using HHRU_Console.Core.Quartz;
 using HHRU_Console.Core.Services;
+using HHRU_Console.Core.Services.Host;
 using Microsoft.Extensions.DependencyInjection;
+using Quartz.Spi;
 
 namespace HHRU_Console.Core.Configuration;
 
@@ -12,8 +15,15 @@ public static class HHruConsoleServiceCollectionExtensions
 
         HHruConfigurations.DateTimeSerializer();
 
-        services.AddTransient<IResponseService, ResponseService>();
-        services.AddTransient<IAccountService, AccountService>();
+        services.AddSingleton<IResponseService, ResponseService>();
+        services.AddSingleton<IAccountService, AccountService>();
+        services.AddSingleton<IResumeService, ResumeService>();
+        services.AddSingleton<ResumeAdvancingService>();
+
+        services.AddSingleton<IJobFactory, SingletonJobFactory>();
+        services.AddSingleton<ResumeAdvancingJob>();
+
+        services.AddHostedService<ResumeUpdateInit>();
 
         return services;
     }

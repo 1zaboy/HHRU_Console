@@ -3,6 +3,7 @@ using HHApiLib.Configurations;
 using HHApiLib.Services;
 using HHRU_Console.Api.Services;
 using HHRU_Console.Core.Configuration;
+using HHRU_Console.Data;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Authorization;
 
@@ -13,9 +14,14 @@ Setup.Init(builder.Configuration.GetSection("ApiConfig").Get<Config>());
 // Add services to the container.
 builder.Services.AddHttpContextAccessor();
 builder.Services.AddHHruConsoleCoreServices();
+builder.Services.AddMongoDBDataContext(x =>
+{
+    x.ConnectionString = builder.Configuration.GetSection("MongoDB:ConnectionString").Get<string>();
+    x.DatabaseName = builder.Configuration.GetSection("MongoDB:DatabaseName").Get<string>();
+});
 
 builder.Services.AddTransient<IAuthorizationHandlerProvider, DefaultAuthorizationHandlerProvider>();
-builder.Services.AddScoped<ITokenService, TokenService>();
+builder.Services.AddSingleton<ITokenService, TokenService>();
 
 builder.Services.AddControllers();
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle

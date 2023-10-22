@@ -139,7 +139,7 @@ public partial class HHruAuthenticationHandler : OAuthHandler<HHruAuthentication
 
     private async Task RemoveToken()
     {
-        var accessToken = await _tokenService.GetAccessToken();
+        var accessToken = await _tokenService.GetAccessTokenAsync();
         await $"{Options.TokenEndpoint}"
         .WithOAuthBearerToken(accessToken)
         .WithHeaderAgent()

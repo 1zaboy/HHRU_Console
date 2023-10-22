@@ -2,5 +2,5 @@
 
 public interface ITokenService
 {
-    Task<string> GetAccessToken();
+    Task<string> GetAccessTokenAsync();
 }

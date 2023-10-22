@@ -20,6 +20,7 @@
   <ItemGroup>
     <ProjectReference Include="..\HHApiLib\HHApiLib.csproj" />
     <ProjectReference Include="..\HHRU_Console.Core\HHRU_Console.Core.csproj" />
+    <ProjectReference Include="..\HHRU_Console.Data\HHRU_Console.Data.csproj" />
   </ItemGroup>
 
 </Project>

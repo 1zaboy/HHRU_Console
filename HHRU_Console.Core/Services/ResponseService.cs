@@ -17,7 +17,7 @@ internal class ResponseService : IResponseService
     {
         try
         {
-            var token = await _tokenService.GetAccessToken();
+            var token = await _tokenService.GetAccessTokenAsync();
 
             var responseApi = new ResponseApi(token);
             var responses = await responseApi.GetResponsesAsync(int.MaxValue);

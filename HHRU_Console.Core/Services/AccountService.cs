@@ -14,7 +14,7 @@ internal class AccountService : IAccountService
 
     public async Task<Self> GetSelfAsync()
     {
-        var token = await _tokenService.GetAccessToken();
+        var token = await _tokenService.GetAccessTokenAsync();
 
         var responseApi = new ActiveClientApi(token);
         var client = await responseApi.GetClientAsync();

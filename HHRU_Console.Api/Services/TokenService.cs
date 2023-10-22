@@ -12,7 +12,7 @@ public class TokenService : ITokenService
         _httpContextAccessor = httpContextAccessor;
     }
 
-    public async Task<string> GetAccessToken()
+    public async Task<string> GetAccessTokenAsync()
     {
         return await _httpContextAccessor.HttpContext.GetTokenAsync("access_token") ?? throw new NullReferenceException();
     }
