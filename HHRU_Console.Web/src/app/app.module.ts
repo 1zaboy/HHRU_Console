@@ -17,6 +17,7 @@ import { MenuComponent } from './common/components/menu/menu.component';
 import { SelfComponent } from './common/components/self/self.component';
 import { TuiAvatarModule } from "@taiga-ui/kit";
 import { AgDataGridModule } from "./common/ag-grid/ag-data-grid.module";
+import { RefreshComponent } from './common/components/refresh/refresh.component';
 
 const appInitializerFn = (appConfig: ConfigurationService) => {
   return () => {
@@ -31,7 +32,8 @@ const appInitializerFn = (appConfig: ConfigurationService) => {
     OverviewComponent,
     AuthRedirectComponent,
     MenuComponent,
-    SelfComponent
+    SelfComponent,
+    RefreshComponent,
   ],
   imports: [
     BrowserModule,
