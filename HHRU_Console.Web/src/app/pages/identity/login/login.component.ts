@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { ApiService } from 'src/app/common/services/api.service';
+import { StorageService } from 'src/app/common/services/storage.service';
 import { AuthService } from 'src/app/services/auth.service';
 import { UserService } from 'src/app/services/user.service';
 
@@ -12,11 +13,18 @@ import { UserService } from 'src/app/services/user.service';
 export class LoginComponent implements OnInit {
 
   constructor(
+    private readonly _storage: StorageService,
     private readonly _auth: AuthService,
+    private readonly _user: UserService,
   ) { }
 
   ngOnInit(): void {
-    this._auth.signIn();
+    var token = this._storage.localStorageGetItem('LOGIN_DATA');
+    if (token != null) {
+      this._auth.signIn();
+    } else {
+      this._user.loadUser();
+    }
   }
 
   onEnter() {
