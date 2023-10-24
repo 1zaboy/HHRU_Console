@@ -8,11 +8,11 @@ namespace HHRU_Console.Core.Services;
 
 internal class ResumeService : IResumeService
 {
-    private readonly ITokenService _tokenService;
+    private readonly IAccessService _tokenService;
     private readonly MongoDBContext _mongoDBContext;
     private readonly ResumeAdvancingService _resumeAdvancingService;
 
-    public ResumeService(ITokenService tokenService, MongoDBContext mongoDBContext, ResumeAdvancingService resumeAdvancingService)
+    public ResumeService(IAccessService tokenService, MongoDBContext mongoDBContext, ResumeAdvancingService resumeAdvancingService)
     {
         _tokenService = tokenService;
         _mongoDBContext = mongoDBContext;
@@ -27,40 +27,59 @@ internal class ResumeService : IResumeService
         var resumes = await resumeApi.GetResumesAsync();
 
         var dao = _mongoDBContext.Get<IResumeUpdateDAO>();
-        return resumes.Items.Select(x =>
+        var resumeList = new List<Resume>();
+
+        foreach (var x in resumes.Items)
         {
-            var obj = dao.GetAsync(x.Id);
-            return new Resume(x.Title, obj != null);
-        }).ToList();
+            var obj = await dao.GetAsync(x.Id);
+            var resume = new Resume
+            {
+                Id = x.Id,
+                Title = x.Title,
+                Description = "",
+                IsAdvancing = obj != null,
+            };
+            resumeList.Add(resume);
+        }
+
+        return resumeList;
     }
 
-    public async Task SetAdcancingStatusAsynk(string resumeId, bool isAdcancing)
+    public async Task SetAdvancingStatusAsynk(string resumeId, bool isAdvancing)
     {
+        try
+        {
+            var email = await _tokenService.GetEmailAsync();
+            var model = new Data.Models.ResumeUpdateEntity
+            {
+                Id = resumeId,
+                IsAdcanving = isAdvancing,
+                OwnerEmail = email,
+            };
 
-        var model = new Data.Models.ResumeUpdateEntity
-        {
-            Id = resumeId,
-            IsAdcanving = isAdcancing,
-        };
+            var dao = _mongoDBContext.Get<IResumeUpdateDAO>();
+            if (await dao.CheckAsync(resumeId))
+            {
+                await dao.UpdateAsync(resumeId, model);
+            }
+            else
+            {
+                await dao.SetAsync(model);
+            }
 
-        var dao = _mongoDBContext.Get<IResumeUpdateDAO>();
-        if (await dao.CheckAsync(resumeId))
-        {
-            await dao.UpdateAsync(resumeId, model);
+            model = await dao.GetAsync(resumeId);
+            if (isAdvancing)
+            {
+                await _resumeAdvancingService.AddAsync(model);
+            }
+            else
+            {
+                await _resumeAdvancingService.RemoveAsync(model.Id);
+            }
         }
-        else
+        catch (Exception ex)
         {
-            await dao.SetAsync(model);
-        }
-
-        model = await dao.GetAsync(resumeId);
-        if (isAdcancing)
-        {
-            await _resumeAdvancingService.AddAsync(model);
-        }
-        else
-        {
-            await _resumeAdvancingService.RemoveAsync(model.Id);
+            throw ex;
         }
     }
 }

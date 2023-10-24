@@ -1,21 +1,20 @@
-﻿using HHApiLib.Services;
-using HHRU_Console.Core.Quartz;
+﻿using HHRU_Console.Core.Quartz;
 using HHRU_Console.Data.Models;
 using Quartz;
 using Quartz.Impl;
+using Quartz.Spi;
 
 namespace HHRU_Console.Core.Services;
 
 internal class ResumeAdvancingService
 {
-    private const string GROUP_NAME = "RA_GROUP";
     private List<ResumeUpdateEntity> _resumeUpdateEntities;
     private IScheduler _scheduler;
+    private readonly IJobFactory _jobFactory;
 
-    private readonly ITokenService _tokenService;
-    public ResumeAdvancingService(ITokenService tokenService)
+    public ResumeAdvancingService(IJobFactory jobFactory)
     {
-        _tokenService = tokenService;
+        _jobFactory = jobFactory;
     }
 
     public async Task Init(List<ResumeUpdateEntity> entities)
@@ -23,6 +22,7 @@ internal class ResumeAdvancingService
         _resumeUpdateEntities = new List<ResumeUpdateEntity>(entities);
 
         _scheduler = await StdSchedulerFactory.GetDefaultScheduler();
+        _scheduler.JobFactory = _jobFactory;
         await _scheduler.Start();
 
         await InitAddItems();
@@ -40,12 +40,10 @@ internal class ResumeAdvancingService
 
     public async Task AddAsync(ResumeUpdateEntity model)
     {
-        var token = await _tokenService.GetAccessTokenAsync();
-
         var jobParams = new Dictionary<string, string>
         {
-            {"token",  token},
-            {"resumeId",  model.Id},
+            {"ResumeId",  model.Id},
+            {"OwnerEmail",  model.OwnerEmail},
         };
 
         IJobDetail job = JobBuilder.Create<ResumeAdvancingJob>()
@@ -54,7 +52,7 @@ internal class ResumeAdvancingService
             .Build();
 
         ITrigger trigger = TriggerBuilder.Create()
-            .WithIdentity(model.Id, GROUP_NAME)
+            .WithIdentity(model.Id)
             .StartAt(model.AdcanvingAt.HasValue ? model.AdcanvingAt.Value : DateTime.UtcNow)
             .WithSimpleSchedule(x => x
                 .WithIntervalInMinutes(250)
@@ -66,7 +64,9 @@ internal class ResumeAdvancingService
 
     public async Task RemoveAsync(string id)
     {
-        await _scheduler.DeleteJob(new JobKey(id));
+        var data = await _scheduler.GetJobDetail(new JobKey(id));
+        if (data != null)
+            await _scheduler.DeleteJob(new JobKey(id));
     }
 
 }

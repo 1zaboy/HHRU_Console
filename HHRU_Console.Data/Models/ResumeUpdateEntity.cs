@@ -6,6 +6,7 @@ public class ResumeUpdateEntity
 {
     [BsonId]
     public string Id { get; set; }
+    public string OwnerEmail { get; set; }
     public bool IsAdcanving { get; set; }
     public DateTime? AdcanvingAt { get; set; }
 

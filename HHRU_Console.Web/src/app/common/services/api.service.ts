@@ -4,6 +4,7 @@ import { ConfigurationService } from 'src/app/configuration/configuration.servic
 import { Observable } from 'rxjs';
 import { User } from 'src/app/models/user';
 import { Grid } from '../models/grid';
+import { Resume } from '../models/resume';
 
 @Injectable({
   providedIn: 'root'
@@ -13,6 +14,9 @@ export class ApiService {
   private readonly LOGOUT = 'api/Account/logout';
   private readonly LOAD_USER = 'api/Account/me';
   private readonly LOAD_RESPONSES = 'api/Response';
+  private readonly LOAD_RESUMES = 'api/Resume';
+  private readonly SET_RESUME_ADVANCING = 'api/Resume/advancing';
+
 
   protected baseUrl: string;
 
@@ -38,5 +42,16 @@ export class ApiService {
 
   loadResponses(): Observable<Grid> {
     return this._http.get<Grid>(`${this.baseUrl}${this.LOAD_RESPONSES}`);
+  }
+
+  loadResumes(): Observable<Resume[]> {
+    return this._http.get<Resume[]>(`${this.baseUrl}${this.LOAD_RESUMES}`);
+  }
+
+  setAdvancing(resumeId: string, isAdvancing: boolean): Observable<any> {
+    return this._http.post(`${this.baseUrl}${this.SET_RESUME_ADVANCING}`, {
+      resumeId: resumeId,
+      isAdvancing: isAdvancing,
+    });
   }
 }

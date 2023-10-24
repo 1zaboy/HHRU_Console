@@ -2,12 +2,8 @@
 
 public class Resume
 {
+    public string Id { get; set; }
     public string Title { get; set; }
     public bool IsAdvancing { get; set; }
-
-    public Resume(string title, bool isAdvancing)
-    {
-        Title = title;
-        IsAdvancing = isAdvancing;
-    }
+    public string Description { get; set; }
 }

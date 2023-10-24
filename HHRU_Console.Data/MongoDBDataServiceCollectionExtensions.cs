@@ -12,6 +12,7 @@ public static class MongoDBDataServiceCollectionExtensions
 
         services.AddSingleton<MongoDBContext>();
         services.AddSingleton<IResumeUpdateDAO, ResumeUpdateDAO>();
+        services.AddSingleton<IUserDAO, UserDAO>();
 
         services.Configure(options);
 

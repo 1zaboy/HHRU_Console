@@ -25,6 +25,8 @@ public static class HHruConsoleServiceCollectionExtensions
 
         services.AddHostedService<ResumeUpdateInit>();
 
+        services.AddAutoMapper(typeof(MappingProfile));
+
         return services;
     }
 

@@ -3,9 +3,11 @@ using HHApiLib.Configurations;
 using HHApiLib.Services;
 using HHRU_Console.Api.Services;
 using HHRU_Console.Core.Configuration;
+using HHRU_Console.Core.Services;
 using HHRU_Console.Data;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Authorization;
+using System.Security.Claims;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -21,7 +23,7 @@ builder.Services.AddMongoDBDataContext(x =>
 });
 
 builder.Services.AddTransient<IAuthorizationHandlerProvider, DefaultAuthorizationHandlerProvider>();
-builder.Services.AddSingleton<ITokenService, TokenService>();
+builder.Services.AddSingleton<IAccessService, AccessService>();
 
 builder.Services.AddControllers();
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
@@ -56,6 +58,22 @@ builder.Services.AddAuthentication(HHruAuthenticationDefaults.AuthenticationSche
             UseDefaultCredentials = true,
             UseCookies = true,
             AllowAutoRedirect = true,
+        };
+        options.Events.OnCreatingTicket = (x) =>
+        {
+            var service = x.HttpContext.RequestServices.GetService<IAccountService>();
+            var email = x.Identity.Claims.FirstOrDefault(x => x.Type == ClaimsIdentity.DefaultNameClaimType);
+            if (email != null)
+            {
+                service.SaveUserData(new HHRU_Console.Core.Models.UserAccessData()
+                {
+                    AccessToken = x.AccessToken,
+                    RefreshToken = x.RefreshToken,
+                    ExpiresIn = x.ExpiresIn.Value,
+                    Email = email.Value,
+                });
+            }
+            return Task.CompletedTask;
         };
     });
 

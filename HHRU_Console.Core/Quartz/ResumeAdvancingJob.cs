@@ -16,20 +16,26 @@ internal class ResumeAdvancingJob : IJob
 
     public async Task Execute(IJobExecutionContext context)
     {
-        var token = context.MergedJobDataMap.GetString("token");
-        var resumeId = context.MergedJobDataMap.GetString("resumeId");
+        var resumeId = context.MergedJobDataMap.GetString("ResumeId");
+        var ownerEmail = context.MergedJobDataMap.GetString("OwnerEmail");
+        var dao = _mongoDBContext.Get<IUserDAO>();
+        var userEntity = await dao.GetAsync(ownerEmail);
 
-        var resumeApi = new ResumeApi(token);
+        if (userEntity == null)
+            return;
+
+        var resumeApi = new ResumeApi(userEntity.AccessToken);
         await resumeApi.Republish(resumeId);
 
         var resume = await resumeApi.GetResumeAsync(resumeId);
 
-        var dao = _mongoDBContext.Get<IResumeUpdateDAO>();
-        await dao.UpdateAsync(resumeId, new ResumeUpdateEntity
+        var daoRU = _mongoDBContext.Get<IResumeUpdateDAO>();
+        await daoRU.UpdateAsync(resumeId, new ResumeUpdateEntity
         {
             Id = resumeId,
             IsAdcanving = true,
-            AdcanvingAt = resume.NextPublishAt
+            AdcanvingAt = resume.NextPublishAt,
+            OwnerEmail = userEntity.Email,
         });
     }
 }

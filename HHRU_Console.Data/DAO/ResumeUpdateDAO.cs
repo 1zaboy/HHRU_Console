@@ -20,7 +20,7 @@ internal class ResumeUpdateDAO : IResumeUpdateDAO
     public async Task<ResumeUpdateEntity> GetAsync(string id)
     {
         var collection = GetCollection();
-        var filter = Builders<ResumeUpdateEntity>.Filter.Eq("_id", new ObjectId(id));
+        var filter = Builders<ResumeUpdateEntity>.Filter.Eq("_id", id);
         var data = await collection.FindAsync(filter);
         return await data.FirstOrDefaultAsync();
     }
@@ -44,7 +44,8 @@ internal class ResumeUpdateDAO : IResumeUpdateDAO
         var filter = Builders<ResumeUpdateEntity>.Filter.Eq(r => r.Id, id);
 
         var update = Builders<ResumeUpdateEntity>.Update
-            .Set(x => x.IsAdcanving, entity.IsAdcanving);
+            .Set(x => x.IsAdcanving, entity.IsAdcanving)
+            .Set(x => x.OwnerEmail, entity.OwnerEmail);
 
         if (entity.AdcanvingAt.HasValue)
             update = update.Set(x => x.AdcanvingAt, entity.AdcanvingAt.Value);
@@ -55,7 +56,8 @@ internal class ResumeUpdateDAO : IResumeUpdateDAO
 
     public async Task<bool> CheckAsync(string id)
     {
-        return (await GetAsync(id)) == null ? false : true;
+        var data = await GetAsync(id);
+        return data != null;
     }
 
     private IMongoCollection<ResumeUpdateEntity> GetCollection()

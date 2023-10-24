@@ -1,4 +1,5 @@
-﻿using HHRU_Console.Core.Models;
+﻿using HHRU_Console.Api.Models;
+using HHRU_Console.Core.Models;
 using HHRU_Console.Core.Services;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -23,9 +24,9 @@ public class ResumeController : ControllerBase
         return await _resumeService.GetResumesAsynk();
     }
 
-    [HttpPost("adcancing")]
-    public async Task SetAdcancingAsync([FromBody] SetAdcancingParams param)
+    [HttpPost("advancing")]
+    public async Task SetAdvancingAsync([FromBody] SetAdvancingParams param)
     {
-        await _resumeService.SetAdcancingStatusAsynk(param.ResumeId, param.IsAdcanving);
+        await _resumeService.SetAdvancingStatusAsynk(param.ResumeId, param.IsAdvancing);
     }
 }

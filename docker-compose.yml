@@ -18,10 +18,24 @@ services:
     networks:
       - bridge-net
 
+  mongo-express:
+    image: mongo-express:latest
+    container_name: mongodb-express
+    ports:
+      - "8081:8081"
+    environment:
+      ME_CONFIG_MONGODB_SERVER: mongodb
+      ME_CONFIG_MONGODB_PORT: 27017
+    depends_on:
+      - mongodb
+    networks:
+      - bridge-net
+
   console-api:
     image: ${REGISTRY:-console}/api:${PLATFORM:-linux}-${TAG:-latest}
     ports:
       - "5002:80"
+      - "5003:443" 
     build:
       context: .
       dockerfile: HHRU_Console.Api/Dockerfile
@@ -31,6 +45,11 @@ services:
       - mongodb
     environment:
       - ASPNETCORE_ENVIRONMENT=Development
+      - ASPNETCORE_URLS=https://+:443;http://+:80
+      - ASPNETCORE_Kestrel__Certificates__Default__Password=password
+      - ASPNETCORE_Kestrel__Certificates__Default__Path=/https/aspnetapp.pfx
     networks:
       - bridge-net
+    volumes:
+      - ~/.aspnet/https:/https:ro
 

@@ -1,6 +1,7 @@
 ﻿namespace HHApiLib.Services;
 
-public interface ITokenService
+public interface IAccessService
 {
     Task<string> GetAccessTokenAsync();
+    Task<string> GetEmailAsync();
 }

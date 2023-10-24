@@ -22,14 +22,14 @@ namespace AspNet.Security.OAuth.HHru;
 
 public partial class HHruAuthenticationHandler : OAuthHandler<HHruAuthenticationOptions>, IAuthenticationSignOutHandler
 {
-    private readonly ITokenService _tokenService;
+    private readonly IAccessService _tokenService;
 
     public HHruAuthenticationHandler(
         [NotNull] IOptionsMonitor<HHruAuthenticationOptions> options,
         [NotNull] ILoggerFactory logger,
         [NotNull] UrlEncoder encoder,
         [NotNull] ISystemClock clock,
-        [NotNull] ITokenService tokenService)
+        [NotNull] IAccessService tokenService)
         : base(options, logger, encoder, clock)
     {
         _tokenService = tokenService;
