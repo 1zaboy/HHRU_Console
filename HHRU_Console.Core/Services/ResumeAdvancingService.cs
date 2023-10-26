@@ -51,9 +51,13 @@ internal class ResumeAdvancingService
             .WithIdentity(model.Id)
             .Build();
 
+        var trigerTime = model.AdcanvingAt.HasValue && model.AdcanvingAt.Value > DateTime.UtcNow 
+            ? model.AdcanvingAt.Value
+            : DateTime.UtcNow;
+
         ITrigger trigger = TriggerBuilder.Create()
             .WithIdentity(model.Id)
-            .StartAt(model.AdcanvingAt.HasValue ? model.AdcanvingAt.Value : DateTime.UtcNow)
+            .StartAt(trigerTime)
             .WithSimpleSchedule(x => x
                 .WithIntervalInMinutes(250)
                 .RepeatForever())
