@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { ApiService } from '../common/services/api.service';
-import { BehaviorSubject, Subject, map, tap } from 'rxjs';
+import { BehaviorSubject, Observable, Subject, map, tap } from 'rxjs';
 import { User } from '../models/user';
 import { StorageService } from '../common/services/storage.service';
 
@@ -27,5 +27,9 @@ export class UserService {
           this.userLoaded.next(null);
         }
       })
+  }
+
+  logout(): Observable<void> {
+    return this._api.logout();
   }
 }

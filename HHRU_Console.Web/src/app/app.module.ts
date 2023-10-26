@@ -1,5 +1,5 @@
 import { NgDompurifySanitizer } from "@tinkoff/ng-dompurify";
-import { TuiRootModule, TuiDialogModule, TuiAlertModule, TUI_SANITIZER } from "@taiga-ui/core";
+import { TuiRootModule, TuiDialogModule, TuiAlertModule, TUI_SANITIZER, TuiSvgModule } from "@taiga-ui/core";
 import { BrowserAnimationsModule } from "@angular/platform-browser/animations";
 import { APP_INITIALIZER, NgModule } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
@@ -51,6 +51,7 @@ const appInitializerFn = (appConfig: ConfigurationService) => {
     TuiAlertModule,
     TuiAvatarModule,
     AgDataGridModule,
+    TuiSvgModule,
     TuiCheckboxBlockModule,
   ],
   providers: [

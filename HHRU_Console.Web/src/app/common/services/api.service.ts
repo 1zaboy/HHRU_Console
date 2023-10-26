@@ -28,8 +28,8 @@ export class ApiService {
     this.baseUrl = _configService.settings?.api.url ?? '';
   }
 
-  logout() {
-    return this._http.get(`${this.baseUrl}${this.LOGOUT}`);
+  logout(): Observable<void> {
+    return this._http.get<void>(`${this.baseUrl}${this.LOGOUT}`);
   }
 
   auth(code: string, state: string): Observable<string> {

@@ -28,7 +28,8 @@ internal class ResponseService : IResponseService
                 State = x.State.Name,
                 VacancyTitle = x.Vacancy.Name,
                 VacancyAddress = $"{x.Vacancy.Address?.City ?? ""} {x.Vacancy.Address?.Street ?? ""}",
-                EmployerName = x.Vacancy.Employer.Name
+                EmployerName = x.Vacancy.Employer.Name,
+                ActionUrl = x.Vacancy.AlternateUrl,
             });
 
             var gridBuilder = new GridBuilder<ResponsesGridModel>();

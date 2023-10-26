@@ -10,6 +10,9 @@ partial class ResponsesGridModel
     [GridColumnSetting("State")]
     public string State { get; set; }
 
+    [GridColumnSetting("Employer Name")]
+    public string EmployerName { get; set; }
+
     [GridColumnSetting("Vacancy Title")]
     public string VacancyTitle { get; set; }
 
@@ -18,8 +21,8 @@ partial class ResponsesGridModel
 
     [GridColumnSetting("Create Date")]
     public DateTime CreateDate { get; set; }
-    
-    [GridColumnSetting("Employer Name")]
-    public string EmployerName { get; set; }
+
+    [GridRowActioinAttrivute(GridActionType.GoByUrl)]
+    public string ActionUrl { get; set; }
 
 }

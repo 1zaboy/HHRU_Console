@@ -28,7 +28,7 @@ export class ActionCellRendererComponent implements ICellRendererAngularComp {
     this.action = params.action;
     this.tag = params.data.tag;
     this.key = params.data.key;
-    this.customData = params.action.data;
+    this.customData = params.data.actions[params.action.data].actionData;
     this.needClickEvent = params.needClickEvent;
   }
 

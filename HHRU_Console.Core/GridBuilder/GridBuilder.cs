@@ -40,16 +40,26 @@ internal class GridBuilder<T> where T : class
         var i = 0;
         foreach (T row in rows) // string
         {
-            grid.Layout.Rows.Add(new RowDefinition() { Key = $"{i}", Tag = $"{i}" });
 
             var tipe = row.GetType();
             var properties = tipe.GetProperties().ToList();
+
+            var rowActions = properties.Select(x =>
+            {
+                var attributeAction = x.GetCustomAttribute<GridRowActioinAttrivute>();
+                if (attributeAction != null)
+                    return new GridAction(attributeAction.Type, x.GetValue(row));
+                return null;
+            }).Where(x => x != null);
+
+            grid.Layout.Rows.Add(new RowDefinition() { Key = $"{i}", Tag = $"{i}", Actions = new List<GridAction>(rowActions) });
 
             var rowData = properties.Select(x =>
             {
                 var attribute = x.GetCustomAttribute<GridColumnSettingAttribute>();
                 if (attribute != null)
                     return x.GetValue(row) ?? null;
+
                 return null;
             }).Where(x => x != null);
 

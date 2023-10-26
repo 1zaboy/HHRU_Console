@@ -1,2 +1,5 @@
 <app-self></app-self>
-<div *ngFor="let item of menuItems" (click)="onClick(item)">{{item.title}}</div>
+<div *ngFor="let item of menuItems" class="menu__item my-button" (click)="onClick(item)">
+  <tui-svg class="menu__item-icon" [src]="item.icon"></tui-svg>
+  <span>{{item.title}}</span>
+</div>

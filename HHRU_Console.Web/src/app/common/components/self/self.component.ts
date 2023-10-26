@@ -23,4 +23,7 @@ export class SelfComponent implements OnInit {
     this._user.loadUser();
   }
 
+  onLogout() {
+    this._user.logout().subscribe();
+  }
 }

@@ -32,6 +32,7 @@ import { LocaleFormats } from '../../models/localeFormats';
 import { DEFAULT_FORMATS } from '../../models/localeMap';
 import { Action } from '../../models/action';
 import { ActionCellRendererComponent } from '../ag-grid-components/action-cell-renderer/action-cell-renderer.component';
+import { CopyService } from '../../services/copy.service';
 
 
 @Component({
@@ -60,11 +61,6 @@ export class AgDataGridComponent implements OnInit, OnChanges, OnDestroy {
 
   readonly MAX_COLUMN_WIDTH: number = 300;
   readonly ACTION_COLUMN_WIDTH: number = 30;
-  readonly EXPAND_COLUMN_WIDTH: number = 20;
-
-  readonly GRID_MIN_CELL_WIDTH: number = 70;
-  readonly GRID_MIN_STATUS_CELL_WIDTH: number = 100;
-  // readonly GRID_MAX_CELL_WIDTH: number = 300;
 
   readonly DEF_CELL_RENDERER = DefCellRendererComponent;
   readonly DEF_CELL_EDITOR = DefCellEditorComponent;
@@ -90,10 +86,10 @@ export class AgDataGridComponent implements OnInit, OnChanges, OnDestroy {
   private _subscriptions: Subscription[] = [];
   private _gridApi: GridApi;
   private _columnApi: ColumnApi;
-  private _columnsToResize: Column[];
 
   constructor(
-    private readonly _zone: NgZone
+    private readonly _zone: NgZone,
+    private readonly _copyService: CopyService,
   ) {
     this.setLocale();
   }
@@ -133,6 +129,16 @@ export class AgDataGridComponent implements OnInit, OnChanges, OnDestroy {
         return this.processPastData(params.data);
       },
 
+      onCellDoubleClicked: (params) => {
+        console.log("double click");
+        return this.cellDoubleClicked(params);
+      },
+
+      onCellClicked: (params) => {
+        console.log("click");
+        this.cellClick(params);
+      },
+
       stopEditingWhenCellsLoseFocus: this.grid.layout.gridViewSettings.stopEditingWhenCellsLoseFocus,
     } as GridOptions);
 
@@ -141,16 +147,11 @@ export class AgDataGridComponent implements OnInit, OnChanges, OnDestroy {
     this.initialized = true;
   }
 
-  onAnimationQueueEmpty(): void {
-    if (!this.grid.layout.gridViewSettings.suppressAutosize && this._columnsToResize) {
-      this._columnApi.autoSizeColumns(this._columnsToResize);
-      this._columnsToResize = null;
-    }
-  }
-
   onGridReady(params): void {
     this._gridApi = params.api;
     this._columnApi = params.columnApi;
+
+    this._columnApi.autoSizeAllColumns();
 
     this.ready.next();
   }
@@ -161,7 +162,21 @@ export class AgDataGridComponent implements OnInit, OnChanges, OnDestroy {
     }
   }
 
-  cellClicked($event): void {
+  cellClick(event: any) {
+    const e = event.event;
+    console.log(event);
+
+    if ('ctrlKey' in e) {
+      if (e.ctrlKey == true) {
+        const successful = this._copyService.copy(event.value);
+        console.log(successful);
+      }
+    }
+  }
+
+  cellDoubleClicked($event): void {
+    console.log($event);
+
     const column = $event.colDef.cellRendererParams.cellColumn as ColumnDefinition;
     const row = $event.data as RowDefinition;
     const rowIndexAboutSort = $event.node.rowIndex as number;
@@ -263,6 +278,7 @@ export class AgDataGridComponent implements OnInit, OnChanges, OnDestroy {
       headerName: column.name,
       field: column.field,
       colId: column.id.toString(),
+      maxWidth: this.MAX_COLUMN_WIDTH,
 
       cellRendererSelector: (params) => {
         return this.renderer(params.colDef, params.data);
