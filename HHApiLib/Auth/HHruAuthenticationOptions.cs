@@ -14,6 +14,7 @@ public class HHruAuthenticationOptions : OAuthOptions
 
         AuthorizationEndpoint = HHruAuthenticationDefaults.AuthorizationEndpoint;
         TokenEndpoint = HHruAuthenticationDefaults.TokenEndpoint;
+        UserInformationEndpoint = HHruAuthenticationDefaults.UserInformationEndpoint;
 
         ClaimActions.MapJsonKey(ClaimTypes.NameIdentifier, "id");
         ClaimActions.MapJsonKey(ClaimTypes.GivenName, "first_name");

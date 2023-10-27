@@ -9,5 +9,4 @@ public abstract class ApiBase
     }
 
     protected string Token { get => _token; }
-
 }

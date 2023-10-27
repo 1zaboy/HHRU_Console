@@ -9,6 +9,7 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <PackageReference Include="FluentValidation.AspNetCore" Version="11.3.0" />
     <PackageReference Include="Microsoft.AspNetCore.Authentication.JwtBearer" Version="7.0.11" />
     <PackageReference Include="Microsoft.AspNetCore.Authentication.OpenIdConnect" Version="7.0.11" />
     <PackageReference Include="Microsoft.AspNetCore.OpenApi" Version="7.0.10" />
@@ -20,6 +21,7 @@
   <ItemGroup>
     <ProjectReference Include="..\HHApiLib\HHApiLib.csproj" />
     <ProjectReference Include="..\HHRU_Console.Core\HHRU_Console.Core.csproj" />
+    <ProjectReference Include="..\HHRU_Console.Data\HHRU_Console.Data.csproj" />
   </ItemGroup>
 
 </Project>

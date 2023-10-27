@@ -8,4 +8,5 @@ public static class HHruAuthenticationDefaults
     public static readonly string CallbackPath = "/api/Account/loginredirect";
     public static readonly string AuthorizationEndpoint = "https://hh.ru/oauth/authorize";
     public static readonly string TokenEndpoint = "https://hh.ru/oauth/token";
+    public static readonly string UserInformationEndpoint = "https://api.hh.ru/me";
 }

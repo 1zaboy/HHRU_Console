@@ -1,0 +1,6 @@
+<ng-container *ngIf="hasResumes">
+  <app-resume-up-item
+    *ngFor="let item of resumes"
+    [resume]="item"
+  ></app-resume-up-item>
+</ng-container>
