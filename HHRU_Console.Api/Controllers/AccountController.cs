@@ -19,6 +19,7 @@ public class AccountController : ControllerBase
         _accountService = accountService;
     }
 
+    // Func for OAuth
     [Authorize]
     [HttpGet("loginredirect")]
     public async Task<ActionResult> LoginRedirect(string code)

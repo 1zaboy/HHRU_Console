@@ -1,6 +1,8 @@
 using AspNet.Security.OAuth.HHru;
+using FluentValidation;
 using HHApiLib.Configurations;
 using HHApiLib.Services;
+using HHRU_Console.Api.Models;
 using HHRU_Console.Api.Services;
 using HHRU_Console.Core.Configuration;
 using HHRU_Console.Core.Services;
@@ -24,6 +26,7 @@ builder.Services.AddMongoDBDataContext(x =>
 
 builder.Services.AddTransient<IAuthorizationHandlerProvider, DefaultAuthorizationHandlerProvider>();
 builder.Services.AddSingleton<IAccessService, AccessService>();
+builder.Services.AddScoped<IValidator<SetAdvancingParams>, SetAdvancingParamsValidator>();
 
 builder.Services.AddControllers();
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
@@ -52,7 +55,6 @@ builder.Services.AddAuthentication(HHruAuthenticationDefaults.AuthenticationSche
         options.SignOutScheme = CookieAuthenticationDefaults.AuthenticationScheme;
         options.SaveTokens = true;
         options.ClaimsIssuer = CookieAuthenticationDefaults.AuthenticationScheme;
-        options.UserInformationEndpoint = "https://api.hh.ru/me";
         options.BackchannelHttpHandler = new HttpClientHandler()
         {
             UseDefaultCredentials = true,

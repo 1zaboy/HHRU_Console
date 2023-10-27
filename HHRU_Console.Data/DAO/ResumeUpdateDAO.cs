@@ -11,6 +11,7 @@ internal class ResumeUpdateDAO : IResumeUpdateDAO
     private const string DB_COLLECTION = "RESUME_UPDATE";
     private readonly string _databaseName;
     private readonly MongoDBContext _mongoDBContext;
+
     public ResumeUpdateDAO(MongoDBContext mongoDBContext, IOptions<MongoDBConnectionOptions> options)
     {
         _mongoDBContext = mongoDBContext;

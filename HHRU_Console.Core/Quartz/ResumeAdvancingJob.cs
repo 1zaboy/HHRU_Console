@@ -9,6 +9,7 @@ namespace HHRU_Console.Core.Quartz;
 internal class ResumeAdvancingJob : IJob
 {
     private readonly MongoDBContext _mongoDBContext;
+
     public ResumeAdvancingJob(MongoDBContext mongoDBContext)
     {
         _mongoDBContext = mongoDBContext;
@@ -18,6 +19,7 @@ internal class ResumeAdvancingJob : IJob
     {
         var resumeId = context.MergedJobDataMap.GetString("ResumeId");
         var ownerEmail = context.MergedJobDataMap.GetString("OwnerEmail");
+
         var dao = _mongoDBContext.Get<IUserDAO>();
         var userEntity = await dao.GetAsync(ownerEmail);
 

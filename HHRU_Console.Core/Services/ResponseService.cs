@@ -8,6 +8,7 @@ namespace HHRU_Console.Core.Services;
 internal class ResponseService : IResponseService
 {
     private readonly IAccessService _tokenService;
+
     public ResponseService(IAccessService tokenService)
     {
         _tokenService = tokenService;

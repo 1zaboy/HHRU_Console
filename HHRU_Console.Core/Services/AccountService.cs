@@ -13,6 +13,7 @@ internal class AccountService : IAccountService
     private readonly IAccessService _tokenService;
     private readonly MongoDBContext _mongoDBContext;
     private readonly IMapper _mapper;
+
     public AccountService(IAccessService tokenService, MongoDBContext mongoDBContext, IMapper mapper)
     {
         _tokenService = tokenService;

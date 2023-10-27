@@ -8,6 +8,7 @@ namespace HHRU_Console.Core.Quartz;
 internal class SingletonJobFactory : IJobFactory
 {
     private readonly IServiceProvider _serviceProvider;
+
     public SingletonJobFactory(IServiceProvider serviceProvider)
     {
         _serviceProvider = serviceProvider;
