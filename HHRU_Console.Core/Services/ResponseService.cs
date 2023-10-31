@@ -2,15 +2,18 @@
 using HHApiLib.Services;
 using HHRU_Console.Core.GridBuilder;
 using HHRU_Console.Core.Models;
+using Microsoft.Extensions.Logging;
 
 namespace HHRU_Console.Core.Services;
 
 internal class ResponseService : IResponseService
 {
     private readonly IAccessService _tokenService;
+    private readonly ILogger<ResponseService> _logger;
 
-    public ResponseService(IAccessService tokenService)
+    public ResponseService(ILogger<ResponseService> logger, IAccessService tokenService)
     {
+        _logger = logger;
         _tokenService = tokenService;
     }
 
@@ -38,9 +41,8 @@ internal class ResponseService : IResponseService
         }
         catch (Exception ex)
         {
-            // TODO: Add log to try box
-            Console.WriteLine(ex.Message);
-            throw ex;
+            _logger.LogError(ex.Message);
+            throw new Exception("Something went wrong");
         }
     }
 }

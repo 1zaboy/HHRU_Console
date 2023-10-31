@@ -3,17 +3,20 @@ using HHApiLib.Services;
 using HHRU_Console.Core.Models;
 using HHRU_Console.Data.DAO;
 using HHRU_Console.Data.Utils;
+using Microsoft.Extensions.Logging;
 
 namespace HHRU_Console.Core.Services;
 
 internal class ResumeService : IResumeService
 {
+    private readonly ILogger<ResumeService> _logger;
     private readonly IAccessService _tokenService;
     private readonly MongoDBContext _mongoDBContext;
     private readonly ResumeAdvancingService _resumeAdvancingService;
 
-    public ResumeService(IAccessService tokenService, MongoDBContext mongoDBContext, ResumeAdvancingService resumeAdvancingService)
+    public ResumeService(ILogger<ResumeService> logger, IAccessService tokenService, MongoDBContext mongoDBContext, ResumeAdvancingService resumeAdvancingService)
     {
+        _logger = logger;
         _tokenService = tokenService;
         _mongoDBContext = mongoDBContext;
         _resumeAdvancingService = resumeAdvancingService;
@@ -21,28 +24,36 @@ internal class ResumeService : IResumeService
 
     public async Task<List<Resume>> GetResumesAsynk()
     {
-        var token = await _tokenService.GetAccessTokenAsync();
-
-        var resumeApi = new ResumeApi(token);
-        var resumes = await resumeApi.GetResumesAsync();
-
-        var dao = _mongoDBContext.Get<IResumeUpdateDAO>();
-        var resumeList = new List<Resume>();
-
-        foreach (var x in resumes.Items)
+        try
         {
-            var obj = await dao.GetAsync(x.Id);
-            var resume = new Resume
-            {
-                Id = x.Id,
-                Title = x.Title,
-                Description = "",
-                IsAdvancing = obj != null,
-            };
-            resumeList.Add(resume);
-        }
+            var token = await _tokenService.GetAccessTokenAsync();
 
-        return resumeList;
+            var resumeApi = new ResumeApi(token);
+            var resumes = await resumeApi.GetResumesAsync();
+
+            var dao = _mongoDBContext.Get<IResumeUpdateDAO>();
+            var resumeList = new List<Resume>();
+
+            foreach (var x in resumes.Items)
+            {
+                var obj = await dao.GetAsync(x.Id);
+                var resume = new Resume
+                {
+                    Id = x.Id,
+                    Title = x.Title,
+                    Description = "",
+                    IsAdvancing = obj != null,
+                };
+                resumeList.Add(resume);
+            }
+
+            return resumeList;
+        }
+        catch (Exception ex)
+        {
+            _logger.LogError(ex.Message);
+            throw new Exception("Something went wrong");
+        }
     }
 
     public async Task SetAdvancingStatusAsynk(string resumeId, bool isAdvancing)
@@ -79,7 +90,8 @@ internal class ResumeService : IResumeService
         }
         catch (Exception ex)
         {
-            throw ex;
+            _logger.LogError(ex.Message);
+            throw new Exception("Something went wrong");
         }
     }
 }

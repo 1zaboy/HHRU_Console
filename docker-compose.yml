@@ -2,8 +2,9 @@ version: '3.4'
 
 
 networks:
-  bridge-net:
-    driver: bridge
+  hhru_console:
+    external: true
+
 
 
 services:
@@ -16,7 +17,7 @@ services:
     volumes:
       - C:\MyData\MongoDB:/data/db
     networks:
-      - bridge-net
+      - hhru_console
 
   mongo-express:
     image: mongo-express:latest
@@ -29,7 +30,7 @@ services:
     depends_on:
       - mongodb
     networks:
-      - bridge-net
+      - hhru_console
 
   console-api:
     image: ${REGISTRY:-console}/api:${PLATFORM:-linux}-${TAG:-latest}
@@ -49,7 +50,7 @@ services:
       - ASPNETCORE_Kestrel__Certificates__Default__Password=password
       - ASPNETCORE_Kestrel__Certificates__Default__Path=/https/aspnetapp.pfx
     networks:
-      - bridge-net
+      - hhru_console
     volumes:
       - ~/.aspnet/https:/https:ro
 
