@@ -1,7 +1,6 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
-using Quartz.Spi;
 using Quartz;
-using HHRU_Console.Core.Services;
+using Quartz.Spi;
 
 namespace HHRU_Console.Core.Quartz;
 

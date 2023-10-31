@@ -34,7 +34,6 @@ internal class GridBuilder<T> where T : class
         }
     }
 
-    // TODO: rework func (where(x => x != null) its can be shift)
     private void SetRows(Grid grid, List<T> rows)
     {
         var i = 0;
@@ -44,27 +43,34 @@ internal class GridBuilder<T> where T : class
             var tipe = row.GetType();
             var properties = tipe.GetProperties().ToList();
 
-            var rowActions = properties.Select(x =>
+            var rowActions = new List<GridAction>();
+            foreach (var property in properties)
             {
-                var attributeAction = x.GetCustomAttribute<GridRowActioinAttrivute>();
+                var attributeAction = property.GetCustomAttribute<GridRowActioinAttrivute>();
                 if (attributeAction != null)
-                    return new GridAction(attributeAction.Type, x.GetValue(row));
-                return null;
-            }).Where(x => x != null);
+                {
+                    var value = property.GetValue(row);
+                    if (value != null)
+                    {
+                        rowActions.Add(new GridAction(attributeAction.Type, value));
+                    }
+                }
+            }
 
             grid.Layout.Rows.Add(new RowDefinition() { Key = $"{i}", Tag = $"{i}", Actions = new List<GridAction>(rowActions) });
 
-            var rowData = properties.Select(x =>
+            var rowData = new List<object>();
+            foreach (var property in properties)
             {
-                var attribute = x.GetCustomAttribute<GridColumnSettingAttribute>();
+                var attribute = property.GetCustomAttribute<GridColumnSettingAttribute>();
                 if (attribute != null)
-                    return x.GetValue(row) ?? null;
+                {
+                    var value = property.GetValue(row);
+                    rowData.Add(value);
+                }
+            }
 
-                return null;
-            }).Where(x => x != null);
-
-            var arr = rowData.ToArray();
-            grid.Data.Add(arr);
+            grid.Data.Add(rowData.ToArray());
             i++;
         }
     }

@@ -9,7 +9,8 @@ public static class HHruConfigurations
 {
     public static void DateTimeSerializer()
     {
-        FlurlHttp.Configure(settings => {
+        FlurlHttp.Configure(settings =>
+        {
             var jsonSettings = new JsonSerializerSettings
             {
                 ContractResolver = new DefaultContractResolver()

@@ -18,11 +18,16 @@ public class AccessService : IAccessService
         return await _httpContextAccessor.HttpContext?.GetTokenAsync("access_token") ?? throw new NullReferenceException();
     }
 
-    // TODO: Rework func
     public Task<string> GetEmailAsync()
     {
-        var identity = _httpContextAccessor.HttpContext.User.Identities.FirstOrDefault(x => x.FindFirst(ClaimsIdentity.DefaultNameClaimType) != null);
-        var claim = identity.FindFirst(ClaimsIdentity.DefaultNameClaimType);
-        return Task.FromResult(claim.Value);
+        var identity = _httpContextAccessor.HttpContext?.User?.Identities.FirstOrDefault(x => x.HasClaim(c => c.Type == ClaimsIdentity.DefaultNameClaimType));
+        var claim = identity?.FindFirst(ClaimsIdentity.DefaultNameClaimType)?.Value;
+
+        if (!string.IsNullOrEmpty(claim))
+        {
+            return Task.FromResult(claim);
+        }
+
+        return null;
     }
 }

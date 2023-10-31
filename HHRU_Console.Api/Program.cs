@@ -31,7 +31,7 @@ builder.Services.AddSingleton<IAccessService, AccessService>();
 builder.Services.AddScoped<IValidator<SetAdvancingParams>, SetAdvancingParamsValidator>();
 
 builder.Services.AddControllers();
-// Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
+
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
@@ -81,6 +81,7 @@ builder.Services.AddAuthentication(HHruAuthenticationDefaults.AuthenticationSche
         };
     });
 
+
 var str = $"{builder.Configuration.GetValue<string>("AppName").Replace("_", "-")}-logs-{builder.Environment.EnvironmentName.ToLower().Replace(".", "-")}-{DateTime.UtcNow:yyyy-MM-dd}";
 var logger = new LoggerConfiguration()
     .WriteTo.Console()
@@ -103,7 +104,6 @@ builder.Host.UseSerilog(logger);
 
 var app = builder.Build();
 
-// Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
 {
     app.UseSwagger();
