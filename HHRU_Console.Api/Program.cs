@@ -9,6 +9,8 @@ using HHRU_Console.Core.Services;
 using HHRU_Console.Data;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Authorization;
+using Serilog;
+using Serilog.Sinks.Elasticsearch;
 using System.Security.Claims;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -79,6 +81,26 @@ builder.Services.AddAuthentication(HHruAuthenticationDefaults.AuthenticationSche
         };
     });
 
+var str = $"{builder.Configuration.GetValue<string>("AppName").Replace("_", "-")}-logs-{builder.Environment.EnvironmentName.ToLower().Replace(".", "-")}-{DateTime.UtcNow:yyyy-MM-dd}";
+var logger = new LoggerConfiguration()
+    .WriteTo.Console()
+    .WriteTo.Elasticsearch(new ElasticsearchSinkOptions(new Uri("http://elasticsearch:9200"))
+    {
+        IndexFormat = str,
+        AutoRegisterTemplate = true,
+        OverwriteTemplate = true,
+        DetectElasticsearchVersion = true,
+        AutoRegisterTemplateVersion = AutoRegisterTemplateVersion.ESv8,
+        NumberOfReplicas = 1,
+        NumberOfShards = 2,
+        BufferLogShippingInterval = new TimeSpan(0, 0, 10),
+    })
+    .Enrich.WithProperty("EnvironmentName", builder.Environment.EnvironmentName)
+    .ReadFrom.Configuration(builder.Configuration)
+.CreateLogger();
+
+builder.Host.UseSerilog(logger);
+
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.
@@ -90,6 +112,7 @@ if (app.Environment.IsDevelopment())
 
 app.UseCors("AllowLocalHost");
 
+app.UseSerilogRequestLogging();
 
 app.UseHttpsRedirection();
 
