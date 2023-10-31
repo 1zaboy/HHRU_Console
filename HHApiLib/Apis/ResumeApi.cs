@@ -1,6 +1,7 @@
 ﻿using Flurl.Http;
 using HHApiLib.Configurations;
 using HHApiLib.Models;
+using HHApiLib.Models.Exceptions.Resume;
 using HHApiLib.Models.Resume;
 using HHApiLib.Utils;
 
@@ -28,11 +29,23 @@ public class ResumeApi : ApiBase
             .GetJsonAsync<Resume>();
     }
 
-    public async Task<IFlurlResponse> Republish(string resumeId)
+    public async Task Republish(string resumeId)
     {
-        return await $"{Setup.Conf.MainApiUrl}/resumes/{resumeId}/publish"
-            .WithOAuthBearerToken(Token)
-            .WithHeaderAgent()
-            .PostAsync();
+        try
+        {
+            await $"{Setup.Conf.MainApiUrl}/resumes/{resumeId}/publish"
+                .WithOAuthBearerToken(Token)
+                .WithHeaderAgent()
+                .PostAsync();
+        }
+        catch (FlurlHttpException ex)
+        {
+            throw ex.StatusCode.Value switch
+            {
+                429 => await ex.GetResponseJsonAsync<ResumeUpdateNotAvailableYetException>(),
+                404 => await ex.GetResponseJsonAsync<ResumeNotExistOrNotAvailableException>(),
+                _ => ex,
+            };
+        }
     }
 }
