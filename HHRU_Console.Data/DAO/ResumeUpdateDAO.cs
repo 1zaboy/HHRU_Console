@@ -55,6 +55,15 @@ internal class ResumeUpdateDAO : IResumeUpdateDAO
         return updateResult.ModifiedCount > 0;
     }
 
+    public async Task<bool> DeleteAsync(string id)
+    {
+        var collection = GetCollection();
+        var filter = Builders<ResumeUpdateEntity>.Filter.Eq(r => r.Id, id);
+
+        var updateResult = await collection.DeleteOneAsync(filter);
+        return updateResult.DeletedCount > 0;
+    }
+
     public async Task<bool> CheckAsync(string id)
     {
         var data = await GetAsync(id);

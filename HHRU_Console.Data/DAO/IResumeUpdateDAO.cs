@@ -8,5 +8,6 @@ public interface IResumeUpdateDAO : IDataAccessObject
     Task<IEnumerable<ResumeUpdateEntity>> GetAllAsync();
     Task<string> SetAsync(ResumeUpdateEntity model);
     Task<bool> UpdateAsync(string id, ResumeUpdateEntity entity);
+    Task<bool> DeleteAsync(string id);
     Task<bool> CheckAsync(string id);
 }
