@@ -2,52 +2,55 @@ version: '3.4'
 
 
 networks:
-  bridge-net:
-    driver: bridge
+  hhru_console:
+    external: true
+
 
 
 services:
-  redis:
-    image: redis:latest
-    container_name: redis
+  mongodb:
+    image: mongo:latest
+    container_name: mongodb
     restart: always
     ports:
-      - '6379:6379'
-    command: redis-server --save 20 1 --loglevel debug 
-    volumes: 
-      - C:\MyData\Redis:/data
+      - "27017:27017"
+    volumes:
+      - C:\MyData\MongoDB:/data/db
     networks:
-      - bridge-net
+      - hhru_console
 
-
-  redis-commander:
-    container_name: redis-commander
-    hostname: redis-commander
-    image: rediscommander/redis-commander:latest
-    restart: always
-    environment:
-      - REDIS_HOSTS=local:redis:6379
+  mongo-express:
+    image: mongo-express:latest
+    container_name: mongodb-express
     ports:
       - "8081:8081"
+    environment:
+      ME_CONFIG_MONGODB_SERVER: mongodb
+      ME_CONFIG_MONGODB_PORT: 27017
     depends_on:
-      - redis
+      - mongodb
     networks:
-      - bridge-net
-
+      - hhru_console
 
   console-api:
     image: ${REGISTRY:-console}/api:${PLATFORM:-linux}-${TAG:-latest}
     ports:
       - "5002:80"
+      - "5003:443" 
     build:
       context: .
       dockerfile: HHRU_Console.Api/Dockerfile
     depends_on:
-      - redis
+      - mongodb
     links:
-      - redis
+      - mongodb
     environment:
-      - REDIS_CONNECTION_STRING=redis:6379
+      - ASPNETCORE_ENVIRONMENT=Development
+      - ASPNETCORE_URLS=https://+:443;http://+:80
+      - ASPNETCORE_Kestrel__Certificates__Default__Password=password
+      - ASPNETCORE_Kestrel__Certificates__Default__Path=/https/aspnetapp.pfx
     networks:
-      - bridge-net
+      - hhru_console
+    volumes:
+      - ~/.aspnet/https:/https:ro
 

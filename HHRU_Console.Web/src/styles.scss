@@ -1,8 +1,26 @@
 /* You can add global styles to this file, and also import other style files */
+
+@font-face {
+  font-family: "Roboto";
+  src: url("assets\\fonts\\romoto\\Roboto-Regular.ttf") format("truetype");
+}
+
+* {
+  font-family: 'Roboto', 'arial', sans-serif;
+}
+
 body {
   margin: 0;
 }
 
 tui-root {
   height: 100%;
+}
+
+button, tui-svg, .my-button {
+  cursor: pointer;
+
+  &:hover {
+    color: lawngreen;
+  }
 }

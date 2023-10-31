@@ -1,5 +1,6 @@
 import { Component } from '@angular/core';
-import { menuItems } from '../../models/menu';
+import { MenuItem, menuItems } from '../../models/menu';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-menu',
@@ -8,8 +9,16 @@ import { menuItems } from '../../models/menu';
 })
 export class MenuComponent {
 
+  constructor(
+    private readonly _router: Router
+  ) {}
+
   get menuItems() {
     return menuItems;
+  }
+
+  onClick(menuItem: MenuItem) {
+    this._router.navigate([`/${menuItem.path}`])
   }
 }
 

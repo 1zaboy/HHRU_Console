@@ -9,7 +9,8 @@ import { FormsModule } from '@angular/forms';
 import { ModuleRegistry } from '@ag-grid-community/core';
 import { ClientSideRowModelModule } from '@ag-grid-community/client-side-row-model';
 import { ActionCellRendererComponent } from './ag-grid-components/action-cell-renderer/action-cell-renderer.component';
-import { TuiSvgModule } from '@taiga-ui/core';
+import { TuiScrollbarModule, TuiSvgModule } from '@taiga-ui/core';
+import { TuiFadeModule } from '@taiga-ui/experimental';
 
 ModuleRegistry.registerModules([ClientSideRowModelModule]);
 
@@ -28,6 +29,8 @@ ModuleRegistry.registerModules([ClientSideRowModelModule]);
     AgGridModule,
     FormsModule,
     TuiSvgModule,
+    TuiFadeModule,
+    TuiScrollbarModule,
   ],
 })
 export class AgDataGridModule {

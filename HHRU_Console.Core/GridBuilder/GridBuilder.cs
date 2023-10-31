@@ -34,27 +34,43 @@ internal class GridBuilder<T> where T : class
         }
     }
 
-    // TODO: rework func (where(x => x != null) its can be shift)
     private void SetRows(Grid grid, List<T> rows)
     {
         var i = 0;
         foreach (T row in rows) // string
         {
-            grid.Layout.Rows.Add(new RowDefinition() { Key = $"{i}", Tag = $"{i}" });
 
             var tipe = row.GetType();
             var properties = tipe.GetProperties().ToList();
 
-            var rowData = properties.Select(x =>
+            var rowActions = new List<GridAction>();
+            foreach (var property in properties)
             {
-                var attribute = x.GetCustomAttribute<GridColumnSettingAttribute>();
-                if (attribute != null)
-                    return x.GetValue(row) ?? null;
-                return null;
-            }).Where(x => x != null);
+                var attributeAction = property.GetCustomAttribute<GridRowActioinAttrivute>();
+                if (attributeAction != null)
+                {
+                    var value = property.GetValue(row);
+                    if (value != null)
+                    {
+                        rowActions.Add(new GridAction(attributeAction.Type, value));
+                    }
+                }
+            }
 
-            var arr = rowData.ToArray();
-            grid.Data.Add(arr);
+            grid.Layout.Rows.Add(new RowDefinition() { Key = $"{i}", Tag = $"{i}", Actions = new List<GridAction>(rowActions) });
+
+            var rowData = new List<object>();
+            foreach (var property in properties)
+            {
+                var attribute = property.GetCustomAttribute<GridColumnSettingAttribute>();
+                if (attribute != null)
+                {
+                    var value = property.GetValue(row);
+                    rowData.Add(value);
+                }
+            }
+
+            grid.Data.Add(rowData.ToArray());
             i++;
         }
     }

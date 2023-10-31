@@ -4,7 +4,6 @@ using HHApiLib.Auth;
 using HHApiLib.Configurations;
 using HHApiLib.Services;
 using HHApiLib.Utils;
-using JetBrains.Annotations;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Authentication.OAuth;
@@ -22,20 +21,20 @@ namespace AspNet.Security.OAuth.HHru;
 
 public partial class HHruAuthenticationHandler : OAuthHandler<HHruAuthenticationOptions>, IAuthenticationSignOutHandler
 {
-    private readonly ITokenService _tokenService;
+    private readonly IAccessService _tokenService;
 
     public HHruAuthenticationHandler(
-        [NotNull] IOptionsMonitor<HHruAuthenticationOptions> options,
-        [NotNull] ILoggerFactory logger,
-        [NotNull] UrlEncoder encoder,
-        [NotNull] ISystemClock clock,
-        [NotNull] ITokenService tokenService)
+        IOptionsMonitor<HHruAuthenticationOptions> options,
+        ILoggerFactory logger,
+        UrlEncoder encoder,
+        ISystemClock clock,
+        IAccessService tokenService)
         : base(options, logger, encoder, clock)
     {
         _tokenService = tokenService;
     }
 
-    protected override async Task<AuthenticationTicket> CreateTicketAsync([NotNull] ClaimsIdentity identity, [NotNull] AuthenticationProperties properties, [NotNull] OAuthTokenResponse tokens)
+    protected override async Task<AuthenticationTicket> CreateTicketAsync(ClaimsIdentity identity, AuthenticationProperties properties, OAuthTokenResponse tokens)
     {
         try
         {
@@ -139,7 +138,7 @@ public partial class HHruAuthenticationHandler : OAuthHandler<HHruAuthentication
 
     private async Task RemoveToken()
     {
-        var accessToken = await _tokenService.GetAccessToken();
+        var accessToken = await _tokenService.GetAccessTokenAsync();
         await $"{Options.TokenEndpoint}"
         .WithOAuthBearerToken(accessToken)
         .WithHeaderAgent()

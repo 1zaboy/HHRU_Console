@@ -12,45 +12,29 @@ import { UserService } from 'src/app/services/user.service';
   styleUrls: ['./overview.component.scss']
 })
 export class OverviewComponent implements OnInit {
-  constructor(
-    private readonly _actionService: ActionService,
-    private readonly _user: UserService,
-    private readonly _api: ApiService,
-    private readonly _reouter: Router,
-  ) {
-    _actionService.pinToActionEvent(ActionKey.VIEW_VACANCY)
-      .subscribe(x => {
-        console.log(x)
-        window.open(`${x.data.customData}`)
-      })
-
-  }
+  grid: Grid = null;
 
   get user() {
     return this._user.userLoaded$;
   }
 
-  grid: Grid = null;
+  constructor(
+    private readonly _actionService: ActionService,
+    private readonly _user: UserService,
+    private readonly _api: ApiService,
+  ) {
+    _actionService.pinToActionEvent(ActionKey.VIEW_VACANCY)
+      .subscribe(x => {
+        window.open(`${x.data.customData}`)
+      });
+  }
 
   ngOnInit(): void {
-    this._user.loadUser();
-
     this._api.loadResponses().subscribe(x => {
       x.layout.actions = [
-        new Action(ActionType.action, ActionKey.VIEW_VACANCY, "View Vacancy", null, 'https://hh.ru/vacancy/82344096'),
+        new Action(ActionType.action, ActionKey.VIEW_VACANCY, "View Vacancy", null, 0),
       ];
       this.grid = x;
     });
   }
-
-  logout() {
-    this._api.logout().subscribe();
-  }
-
-  getMe() {
-    this._api.loadResponses().subscribe(x => {
-      console.log(x);
-    });
-  }
-
 }

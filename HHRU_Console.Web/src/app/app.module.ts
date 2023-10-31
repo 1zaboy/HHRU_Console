@@ -1,5 +1,5 @@
 import { NgDompurifySanitizer } from "@tinkoff/ng-dompurify";
-import { TuiRootModule, TuiDialogModule, TuiAlertModule, TUI_SANITIZER } from "@taiga-ui/core";
+import { TuiRootModule, TuiDialogModule, TuiAlertModule, TUI_SANITIZER, TuiSvgModule } from "@taiga-ui/core";
 import { BrowserAnimationsModule } from "@angular/platform-browser/animations";
 import { APP_INITIALIZER, NgModule } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
@@ -15,8 +15,12 @@ import { AuthRedirectComponent } from './pages/identity/auth-redirect/auth-redir
 import { AuthInterceptor } from './_helpers/auth.interceptor';
 import { MenuComponent } from './common/components/menu/menu.component';
 import { SelfComponent } from './common/components/self/self.component';
-import { TuiAvatarModule } from "@taiga-ui/kit";
+import { TuiAvatarModule, TuiCheckboxBlockModule } from "@taiga-ui/kit";
 import { AgDataGridModule } from "./common/ag-grid/ag-data-grid.module";
+import { RefreshComponent } from './common/components/refresh/refresh.component';
+import { ResumeUpComponent } from './pages/resume-up/resume-up.component';
+import { ResumeUpItemComponent } from './pages/resume-up/resume-up-item/resume-up-item.component';
+import { ReactiveFormsModule } from "@angular/forms";
 
 const appInitializerFn = (appConfig: ConfigurationService) => {
   return () => {
@@ -31,10 +35,14 @@ const appInitializerFn = (appConfig: ConfigurationService) => {
     OverviewComponent,
     AuthRedirectComponent,
     MenuComponent,
-    SelfComponent
+    SelfComponent,
+    RefreshComponent,
+    ResumeUpComponent,
+    ResumeUpItemComponent,
   ],
   imports: [
     BrowserModule,
+    ReactiveFormsModule,
     AppRoutingModule,
     HttpClientModule,
     BrowserAnimationsModule,
@@ -43,6 +51,8 @@ const appInitializerFn = (appConfig: ConfigurationService) => {
     TuiAlertModule,
     TuiAvatarModule,
     AgDataGridModule,
+    TuiSvgModule,
+    TuiCheckboxBlockModule,
   ],
   providers: [
     { provide: HTTP_INTERCEPTORS, useClass: ErrorInterceptor, multi: true },

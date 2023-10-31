@@ -1,0 +1,11 @@
+.menu {
+  &__item {
+    font-size: 18px;
+    margin-bottom: 1rem;
+
+    &-icon {
+      font-size: inherit;
+      margin-right: 7px;
+    }
+  }
+}

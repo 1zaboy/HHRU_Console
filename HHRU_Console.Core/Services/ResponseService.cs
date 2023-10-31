@@ -2,14 +2,18 @@
 using HHApiLib.Services;
 using HHRU_Console.Core.GridBuilder;
 using HHRU_Console.Core.Models;
+using Microsoft.Extensions.Logging;
 
 namespace HHRU_Console.Core.Services;
 
 internal class ResponseService : IResponseService
 {
-    private readonly ITokenService _tokenService;
-    public ResponseService(ITokenService tokenService)
+    private readonly IAccessService _tokenService;
+    private readonly ILogger<ResponseService> _logger;
+
+    public ResponseService(ILogger<ResponseService> logger, IAccessService tokenService)
     {
+        _logger = logger;
         _tokenService = tokenService;
     }
 
@@ -17,7 +21,7 @@ internal class ResponseService : IResponseService
     {
         try
         {
-            var token = await _tokenService.GetAccessToken();
+            var token = await _tokenService.GetAccessTokenAsync();
 
             var responseApi = new ResponseApi(token);
             var responses = await responseApi.GetResponsesAsync(int.MaxValue);
@@ -28,7 +32,8 @@ internal class ResponseService : IResponseService
                 State = x.State.Name,
                 VacancyTitle = x.Vacancy.Name,
                 VacancyAddress = $"{x.Vacancy.Address?.City ?? ""} {x.Vacancy.Address?.Street ?? ""}",
-                EmployerName = x.Vacancy.Employer.Name
+                EmployerName = x.Vacancy.Employer.Name,
+                ActionUrl = x.Vacancy.AlternateUrl,
             });
 
             var gridBuilder = new GridBuilder<ResponsesGridModel>();
@@ -36,9 +41,8 @@ internal class ResponseService : IResponseService
         }
         catch (Exception ex)
         {
-            // TODO: Add log to try box
-            Console.WriteLine(ex.Message);
-            throw ex;
+            _logger.LogError(ex.Message);
+            throw new Exception("Something went wrong");
         }
     }
 }

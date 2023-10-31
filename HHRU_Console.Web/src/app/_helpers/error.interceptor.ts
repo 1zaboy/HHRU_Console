@@ -19,7 +19,9 @@ export class ErrorInterceptor implements HttpInterceptor {
       if (err.status === 401) {
         this._storage.localStorageClear();
         this._storage.localStorageSetItem('LOGIN_DATA', err.error);
-        this._router.navigate(['/login']);
+        this._router.navigateByUrl('/refresh', { skipLocationChange: true }).then(() => {
+          this._router.navigate(['/login']);
+        });
       }
 
       const error = err.message;
