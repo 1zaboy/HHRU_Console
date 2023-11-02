@@ -2,8 +2,6 @@
 
 This repository contains the source code for a web application that acts as a wrapper for the HH.ru API. The project is built using ASP.NET Web API for the backend, Angular for the frontend, and utilizes Docker Compose for containerization. Logging in the project is implemented using the ELK (Elasticsearch, Logstash, Kibana) stack.
 
-![hhruconsoleimg](https://drive.google.com/uc?export=view&id=1Lm1mwtCNq_mv48A_DnLH6QocbTAjv7iy)
-
 ## Functionality
 The website provides the following features:
 
