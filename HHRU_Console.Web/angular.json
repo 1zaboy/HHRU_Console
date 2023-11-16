@@ -76,7 +76,7 @@
         "serve": {
           "builder": "@angular-devkit/build-angular:dev-server",
           "options": {
-            "browserTarget": "ClientApp:build",
+            "browserTarget": "HHRU_Console.Web:build",
             "sslKey": "ssl/key.pem",
             "sslCert": "ssl/cert.pem"
           },
