@@ -1,3 +1,5 @@
 <div class="overview">
-  <app-ag-data-grid class="overview__grid" *ngIf="grid != null" [grid]="grid"></app-ag-data-grid>
+  @if (grid != null) {
+    <app-ag-data-grid class="overview__grid" [grid]="grid"></app-ag-data-grid>
+  }
 </div>

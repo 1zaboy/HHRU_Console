@@ -1,10 +1,13 @@
-<div *ngIf="!needView" class="cell-content"></div>
-<div *ngIf="needView" class="cell-content">
-  <div class="cell-content__origin" [attr.title]="value">
-    <tui-scrollbar class="scrollbar">
-      <div tuiFade tuiScrollable class="fade">
-        <div class="grid-cell-text-environment">{{ value }}</div>
-      </div>
-    </tui-scrollbar>
+@if (needView) {
+  <div class="cell-content">
+    <div class="cell-content__origin" [attr.title]="value">
+      <tui-scrollbar class="scrollbar">
+        <div tuiFade tuiScrollable class="fade">
+          <div class="grid-cell-text-environment">{{ value }}</div>
+        </div>
+      </tui-scrollbar>
+    </div>
   </div>
-</div>
+} @else {
+  <div class="cell-content"></div>
+}

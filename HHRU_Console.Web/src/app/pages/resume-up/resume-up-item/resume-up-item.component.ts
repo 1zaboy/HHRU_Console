@@ -21,8 +21,6 @@ export class ResumeUpItemComponent implements OnInit {
     this.resumeValue.setValue(this.resume.isAdvancing)
     this.resumeValue.valueChanges
       .subscribe(x => {
-        console.log(x);
-
         this._api.setAdvancing(this.resume.id, x).subscribe();
       });
   }

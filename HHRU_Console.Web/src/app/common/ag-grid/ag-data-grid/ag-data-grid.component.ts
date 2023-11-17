@@ -14,7 +14,6 @@ import {
 import {
   ColDef,
   ColGroupDef,
-  Column,
   ColumnApi,
   GridApi,
   GridOptions,

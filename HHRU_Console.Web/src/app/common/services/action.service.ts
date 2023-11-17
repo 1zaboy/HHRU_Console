@@ -28,7 +28,7 @@ export class ActionService {
   makeEvent(action: Action, data?: any) {
     const targetSubject: Subject<ActionEvent> = this._actionEvents[action.actionKey];
 
-    const d = data ? data : action.data;
+    const d = data || action.data;
 
     if (targetSubject !== null) {
       targetSubject.next({ timeStamp: action.timeStamp, data: d });

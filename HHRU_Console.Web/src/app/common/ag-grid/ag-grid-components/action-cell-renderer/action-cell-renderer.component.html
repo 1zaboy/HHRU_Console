@@ -1,6 +1,7 @@
-<tui-svg
-  class="ag-data-grid__action"
-  *ngIf="display"
-  [src]="getActionIcon()"
-  (click)="onGridAction()"
-></tui-svg>
+@if (display) {
+  <tui-svg
+    class="ag-data-grid__action"
+    [src]="getActionIcon()"
+    (click)="onGridAction()"
+  ></tui-svg>
+}

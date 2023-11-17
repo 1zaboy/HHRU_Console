@@ -1,8 +1,11 @@
 <div class="ag-data-grid" #agDataGrid>
-  <ag-grid-angular *ngIf="initialized" class="ag-theme-alpine ag-data-grid__grid"
-                   [gridOptions]="gridOptions"
-                   (gridReady)="onGridReady($event)"
-                   (animationQueueEmpty)="onAnimationQueueEmpty()"
-                   (pasteEnd)="onPasteEnd()" >
-  </ag-grid-angular>
+  @if (initialized) {
+    <ag-grid-angular
+      class="ag-theme-alpine ag-data-grid__grid"
+      [gridOptions]="gridOptions"
+      (gridReady)="onGridReady($event)"
+      (pasteEnd)="onPasteEnd()"
+    >
+    </ag-grid-angular>
+  }
 </div>

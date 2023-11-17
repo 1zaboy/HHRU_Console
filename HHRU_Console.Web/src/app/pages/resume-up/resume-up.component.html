@@ -1,6 +1,5 @@
-<ng-container *ngIf="hasResumes">
-  <app-resume-up-item
-    *ngFor="let item of resumes"
-    [resume]="item"
-  ></app-resume-up-item>
-</ng-container>
+@if (hasResumes) {
+  @for (item of resumes; track item.id) {
+    <app-resume-up-item [resume]="item"></app-resume-up-item>
+  }
+}

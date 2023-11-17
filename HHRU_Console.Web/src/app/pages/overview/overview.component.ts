@@ -1,5 +1,4 @@
 import { Component, OnInit } from '@angular/core';
-import { Router } from '@angular/router';
 import { Action, ActionKey, ActionType } from 'src/app/common/models/action';
 import { Grid } from 'src/app/common/models/grid';
 import { ActionService } from 'src/app/common/services/action.service';

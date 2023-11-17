@@ -17,7 +17,7 @@ export class AuthService {
   ) { }
 
   private auth() {
-    var loginData: any = this._storage.localStorageGetItem('LOGIN_DATA');
+    const loginData: any = this._storage.localStorageGetItem('LOGIN_DATA');
     window.location.href = `https://hh.ru/oauth/authorize?client_id=${loginData.clientId}&response_type=code&state=${loginData.state}`;
   }
 
@@ -37,7 +37,7 @@ export class AuthService {
   }
 
   check(): boolean {
-    var user = localStorage.getItem(this.AUTH_TOKEN);
+    const user = localStorage.getItem(this.AUTH_TOKEN);
     return user != null;
   }
 }
